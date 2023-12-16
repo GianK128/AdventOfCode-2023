@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"unicode"
 )
 
 // ====== UTILS ====== //
@@ -23,38 +24,28 @@ func Part1(inputFilePath string) int {
 	}
 	defer file.Close()
 
-	// Read file line by line and store in codes
-	codes := []string{}
+	sum := 0
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		codes = append(codes, scanner.Text())
-	}
+		code := scanner.Text()
 
-	calibrationCodes := []int{}
-	for _, code := range codes {
 		// Index of first and last character
 		first := 0
 		last := len(code) - 1
 
 		// Loop through the string until the character is a number
-		for !isNumber(code[first : first+1]) {
+		for !unicode.IsDigit(rune(code[first])) {
 			first++
 		}
 
 		// Loop through the string until the character is a number
-		for !isNumber(code[last : last+1]) {
+		for !unicode.IsDigit(rune(code[last])) {
 			last--
 		}
 
 		calibrationCode := code[first:first+1] + code[last:last+1]
 		calibrationCodeInt, _ := strconv.Atoi(calibrationCode)
-		calibrationCodes = append(calibrationCodes, calibrationCodeInt)
-	}
-
-	// Sum all calibration codes
-	sum := 0
-	for _, calibrationCode := range calibrationCodes {
-		sum += calibrationCode
+		sum += calibrationCodeInt
 	}
 
 	return sum
