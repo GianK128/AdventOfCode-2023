@@ -8,13 +8,6 @@ import (
 	"unicode"
 )
 
-// ====== UTILS ====== //
-
-func isNumber(char string) bool {
-	_, err := strconv.Atoi(char)
-	return err == nil
-}
-
 // ====== PART 1 ====== //
 
 func Part1(inputFilePath string) int {
@@ -73,24 +66,21 @@ func Part2(inputFilePath string) int {
 	}
 	defer file.Close()
 
-	codes := []string{}
+	sum := 0
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		codes = append(codes, scanner.Text())
-	}
+		code := scanner.Text()
 
-	calibrationCodes := []int{}
-	for _, code := range codes {
 		first := 0
 		last := len(code) - 1
 
 		// Loop through the string until the character is a number
-		for !isNumber(code[first : first+1]) {
+		for !unicode.IsDigit(rune(code[first])) {
 			first++
 		}
 
 		// Loop through the string until the character is a number
-		for !isNumber(code[last : last+1]) {
+		for !unicode.IsDigit(rune(code[last])) {
 			last--
 		}
 
@@ -121,13 +111,7 @@ func Part2(inputFilePath string) int {
 
 		calibrationCode := firstChar + lastChar
 		calibrationCodeInt, _ := strconv.Atoi(calibrationCode)
-		calibrationCodes = append(calibrationCodes, calibrationCodeInt)
-	}
-
-	// Sum all calibration codes
-	sum := 0
-	for _, calibrationCode := range calibrationCodes {
-		sum += calibrationCode
+		sum += calibrationCodeInt
 	}
 
 	return sum
