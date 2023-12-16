@@ -2,7 +2,6 @@ package day1
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -17,7 +16,7 @@ func isNumber(char string) bool {
 
 // ====== PART 1 ====== //
 
-func Part1(inputFilePath string) {
+func Part1(inputFilePath string) int {
 	file, err := os.Open(inputFilePath)
 	if err != nil {
 		panic(err)
@@ -58,7 +57,7 @@ func Part1(inputFilePath string) {
 		sum += calibrationCode
 	}
 
-	fmt.Println("[Day 1 - Part 1] Sum of all calibration codes:", sum)
+	return sum
 }
 
 // ====== PART 2 ====== //
@@ -76,8 +75,8 @@ var spelledNumbersValues = map[string]string{
 	"nine":  "9",
 }
 
-func Part2(inputFilePath string) {
-	file, err := os.Open("day1/input.txt")
+func Part2(inputFilePath string) int {
+	file, err := os.Open(inputFilePath)
 	if err != nil {
 		panic(err)
 	}
@@ -140,5 +139,5 @@ func Part2(inputFilePath string) {
 		sum += calibrationCode
 	}
 
-	fmt.Println("[Day 1 - Part 2] Sum of all calibration codes:", sum)
+	return sum
 }
