@@ -4,11 +4,12 @@ import (
 	"bufio"
 	"os"
 	"regexp"
-	"strconv"
 	"unicode"
 )
 
 // ====== PART 1 ====== //
+
+const byteDigit0 = 48
 
 func Part1(inputFilePath string) int {
 	file, err := os.Open(inputFilePath)
@@ -36,9 +37,7 @@ func Part1(inputFilePath string) int {
 			last--
 		}
 
-		calibrationCode := code[first:first+1] + code[last:last+1]
-		calibrationCodeInt, _ := strconv.Atoi(calibrationCode)
-		sum += calibrationCodeInt
+		sum += int((code[first]-byteDigit0)*10 + (code[last] - byteDigit0))
 	}
 
 	return sum
@@ -46,17 +45,40 @@ func Part1(inputFilePath string) int {
 
 // ====== PART 2 ====== //
 
-var possibleSpelledNumbers = []string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
-var spelledNumbersValues = map[string]string{
-	"one":   "1",
-	"two":   "2",
-	"three": "3",
-	"four":  "4",
-	"five":  "5",
-	"six":   "6",
-	"seven": "7",
-	"eight": "8",
-	"nine":  "9",
+var spelledNumbersValues = map[string]*regexp.Regexp{
+	"one":   regexp.MustCompile("one"),
+	"two":   regexp.MustCompile("two"),
+	"three": regexp.MustCompile("three"),
+	"four":  regexp.MustCompile("four"),
+	"five":  regexp.MustCompile("five"),
+	"six":   regexp.MustCompile("six"),
+	"seven": regexp.MustCompile("seven"),
+	"eight": regexp.MustCompile("eight"),
+	"nine":  regexp.MustCompile("nine"),
+}
+
+func getSpelledNumberValue(spelledNumber string) byte {
+	switch spelledNumber {
+	case "one":
+		return byteDigit0 + 1
+	case "two":
+		return byteDigit0 + 2
+	case "three":
+		return byteDigit0 + 3
+	case "four":
+		return byteDigit0 + 4
+	case "five":
+		return byteDigit0 + 5
+	case "six":
+		return byteDigit0 + 6
+	case "seven":
+		return byteDigit0 + 7
+	case "eight":
+		return byteDigit0 + 8
+	case "nine":
+		return byteDigit0 + 9
+	}
+	return 0
 }
 
 func Part2(inputFilePath string) int {
@@ -84,34 +106,31 @@ func Part2(inputFilePath string) int {
 			last--
 		}
 
-		firstChar := code[first : first+1]
-		lastChar := code[last : last+1]
+		firstChar := code[first]
+		lastChar := code[last]
 
 		// We need to check for numbers spelled out in the string
 		// After checking for each number, we will store the minimum and maximum index
 		minIndex := first
 		maxIndex := last
-		for _, spelledNumber := range possibleSpelledNumbers {
-			r := regexp.MustCompile(spelledNumber)
-			matches := r.FindAllStringIndex(code, -1)
-			if matches != nil && len(matches) > 0 {
+		for spelledNumber, spelledNumberRegex := range spelledNumbersValues {
+			matches := spelledNumberRegex.FindAllStringIndex(code, -1)
+			if matches != nil {
 				for _, match := range matches {
 					index := match[0]
 					if index < minIndex {
 						minIndex = index
-						firstChar = spelledNumbersValues[spelledNumber]
+						firstChar = getSpelledNumberValue(spelledNumber)
 					}
 					if index > maxIndex {
 						maxIndex = index
-						lastChar = spelledNumbersValues[spelledNumber]
+						lastChar = getSpelledNumberValue(spelledNumber)
 					}
 				}
 			}
 		}
 
-		calibrationCode := firstChar + lastChar
-		calibrationCodeInt, _ := strconv.Atoi(calibrationCode)
-		sum += calibrationCodeInt
+		sum += int((firstChar-byteDigit0)*10 + (lastChar - byteDigit0))
 	}
 
 	return sum
