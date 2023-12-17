@@ -15,4 +15,5 @@ func main() {
 	fmt.Println("[Day 2 - Part 1] Sum of IDs of possible games:", day2.Part1("day2/input.txt"))
 	fmt.Println("[Day 2 - Part 2] Sum of the powers of set of cubes:", day2.Part2("day2/input.txt"))
 	fmt.Println("[Day 3 - Part 1] Sum of adjacent part numbers:", day3.Part1("day3/input.txt"))
+	fmt.Println("[Day 3 - Part 2] Sum of gear ratios:", day3.Part2("day3/input.txt"))
 }
